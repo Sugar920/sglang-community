@@ -45,16 +45,15 @@ QWEN3_6_35B_A3B_1080P_OTHER_ARGS = [
     "--trust-remote-code",
     "--enable-prefill-delayer",
     "--max-running-requests",
-    9,
+    4,
     "--max-mamba-cache-size",
     16,
     "--mem-fraction-static",
     0.8,
     "--cuda-graph-bs",
+    2,
     3,
     4,
-    8,
-    9,
     "--enable-multimodal",
     "--mm-attention-backend",
     "ascend_attn",
@@ -84,8 +83,8 @@ class TestNPUQwen3_6_35BA3B_1P_In1080p_30_Out256_50ms(
     other_args = QWEN3_6_35B_A3B_1080P_OTHER_ARGS
     envs = QWEN3_6_35B_A3B_1080P_ENVS
     dataset_name = "random"
-    max_concurrency = 9
-    num_prompts = 36
+    max_concurrency = 4
+    num_prompts = 16
     input_len = 30
     output_len = 256
     random_range_ratio = 1

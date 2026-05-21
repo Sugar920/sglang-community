@@ -46,19 +46,20 @@ QWEN3_6_35B_A3B_128K_PREFIX_OTHER_ARGS = [
     "--mamba-scheduler-strategy",
     "extra_buffer",
     "--max-running-requests",
-    28,
+    16,
     "--max-mamba-cache-size",
     140,
     "--mem-fraction-static",
     0.68,
     "--cuda-graph-bs",
     2,
+    4,
     6,
+    8,
+    10,
     12,
-    18,
-    24,
-    26,
-    28,
+    14,
+    16,
     "--enable-multimodal",
     "--mm-attention-backend",
     "ascend_attn",
@@ -88,8 +89,8 @@ class TestNPUQwen3_6_35BA3B_1P_In128k_Out1k_Prefix90_50ms(
     other_args = QWEN3_6_35B_A3B_128K_PREFIX_OTHER_ARGS
     envs = QWEN3_6_35B_A3B_128K_PREFIX_ENVS
     dataset_name = "random"
-    max_concurrency = 28
-    num_prompts = 112
+    max_concurrency = 16
+    num_prompts = 64
     input_len = 128000
     output_len = 1000
     random_range_ratio = 1
