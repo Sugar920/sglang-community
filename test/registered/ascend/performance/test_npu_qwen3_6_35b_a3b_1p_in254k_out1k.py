@@ -60,11 +60,11 @@ QWEN3_6_35B_A3B_254K_1K_OTHER_ARGS = [
     "--speculative-algorithm",
     "NEXTN",
     "--speculative-num-steps",
-    3,
+    4,
     "--speculative-eagle-topk",
     1,
     "--speculative-num-draft-tokens",
-    4,
+    5,
 ]
 
 
@@ -82,7 +82,7 @@ class TestNPUQwen3_6_35BA3B_1P_In254k_Out1k_50ms(TestAscendPerformanceTestCaseBa
     input_len = 254000
     output_len = 1000
     random_range_ratio = 1
-    tpot = 16.1
+    tpot = 14.95
     output_token_throughput = 20.70
 
     def test_npu_qwen3_6_35b_a3b_1p_in254k_out1k_50ms(self):
