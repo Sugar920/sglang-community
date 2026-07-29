@@ -4,10 +4,7 @@ from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
     TestAscendAccuracyTestCaseBase,
 )
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
-    BENCHMARK_TOOL_DEFAULT,
-    DEFAULT_URL_FOR_TEST,
     QWEN3_6_35B_A3B_MODEL_PATH,
-    TestAscendPerformanceTestCaseBase,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
@@ -102,46 +99,9 @@ class TestNPUQwen3_6_35BA3B_1P_AIME2026(TestAscendAccuracyTestCaseBase):
         "repetition_penalty": 1.08,
     }
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
     def test_npu_qwen3_6_35b_a3b_1p_aime2026(self):
         """Run NPU accuracy test for Qwen3.6-35B-A3B on AIME2026"""
         self.run_accuracy()
-
-
-class TestNPUQwen3_6_35BA3B_1P_In64k_Out1k_Prefix90_50ms(
-    TestAscendPerformanceTestCaseBase
-):
-    """Test NPU performance for Qwen3.6-35B-A3B 1p in64k out1k prefix90 50ms"""
-
-    base_url = DEFAULT_URL_FOR_TEST
-    benchmark_tool = BENCHMARK_TOOL_DEFAULT
-    model = QWEN3_6_35B_A3B_MODEL_PATH
-    other_args = QWEN3_6_35B_A3B_64K_PREFIX_OTHER_ARGS
-    envs = QWEN3_6_35B_A3B_64K_PREFIX_ENVS
-    dataset_name = "generated-shared-prefix"
-    max_concurrency = 40
-    num_prompts = 40
-    input_len = 65536
-    output_len = 1024
-    random_range_ratio = 1
-    repeat_rate = 0.9
-    warmup_requests = max_concurrency
-    seed = 1
-    tpot = 50
-    request_rate = float("inf")
-    output_token_throughput = 660
-    pop_sglang_is_in_ci_for_gsp = True
-
-    @classmethod
-    def setUpClass(cls):
-        pass
-
-    def test_npu_qwen3_6_35b_a3b_1p_in64k_out1k_prefix90_50ms(self):
-        """Run NPU performance test for Qwen3.6-35B-A3B in64k out1k prefix90 50ms"""
-        self.run_throughput()
 
 
 if __name__ == "__main__":

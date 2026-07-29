@@ -1,8 +1,5 @@
 import unittest
 
-from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
-    TestAscendAccuracyTestCaseBase,
-)
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     AISBENCHMARK_DATASET_DEFAULT,
     DEFAULT_URL_FOR_TEST,
@@ -90,22 +87,6 @@ QWEN3_32B_OTHER_ARGS = [
     "qwen",
 ]
 
-
-class TestQwen32B_GPQA(TestAscendAccuracyTestCaseBase):
-    """Test NPU accuracy for Qwen3-32B-W8A8 on qpqa"""
-
-    model = QWEN3_32B_W8A8_MODEL_PATH
-    other_args = QWEN3_32B_OTHER_ARGS
-    envs = QWEN3_32B_ENVS
-    accuracy = 0.4949
-    datasets = ["gpqa_diamond"]
-    few_shot_num = 0
-    eval_batch_size = 64
-    generation_config = {"max_tokens": 40000, "temperature": 1.0}
-
-    def test_qwen3_32b_qpqa(self):
-        """Run NPU accuracy test for Qwen3-32B-W8A8 on qpqa"""
-        self.run_accuracy()
 
 
 class TestQwen32B(TestAscendPerformanceTestCaseBase):

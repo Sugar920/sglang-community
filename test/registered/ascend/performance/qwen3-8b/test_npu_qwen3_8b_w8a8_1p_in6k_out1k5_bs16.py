@@ -1,8 +1,5 @@
 import unittest
 
-from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
-    TestAscendAccuracyTestCaseBase,
-)
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     QWEN3_8B_EAGLE_MODEL_PATH,
     QWEN3_8B_W8A8_MODEL_PATH,
@@ -93,20 +90,6 @@ class TestQwen8B(TestAscendPerformanceTestCaseBase):
 
     def test_qwen3_8b(self):
         self.run_throughput()
-
-
-class TestQwen8B_gpqa(TestAscendAccuracyTestCaseBase):
-    model = QWEN3_8B_W8A8_MODEL_PATH
-    envs = QWEN3_8B_ENVS
-    other_args = QWEN3_8B_OTHER_ARGS
-    accuracy = 0.4444
-    datasets = ["gpqa_diamond"]
-    few_shot_num = 0
-    generation_config = {"max_tokens": 32768, "temperature": 1.0}
-    eval_batch_size = 16
-
-    def test_accuracy(self):
-        self.run_accuracy()
 
 
 if __name__ == "__main__":

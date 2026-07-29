@@ -6,7 +6,6 @@ from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     QWEN3_NEXT_80B_A3B_MODEL_PATH,
     QWEN3_NEXT_80B_A3B_W8A8_MODEL_PATH,
-    TestAscendPerformanceTestCaseBase,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
@@ -96,23 +95,6 @@ QWEN3_NEXT_80B_A3B_OTHER_ARGS = [
     "--tool-call-parser",
     "qwen3_coder",
 ]
-
-
-class TestQwen3Next80BA3B(TestAscendPerformanceTestCaseBase):
-    max_attempts = 5
-    model = QWEN3_NEXT_80B_A3B_W8A8_MODEL_PATH
-    other_args = QWEN3_NEXT_80B_A3B_OTHER_ARGS
-    envs = QWEN3_NEXT_80B_A3B_ENVS
-    dataset_name = "random"
-    max_concurrency = 16
-    num_prompts = 16
-    input_len = 6144
-    output_len = 1500
-    random_range_ratio = 1
-    tpot = 15.62
-
-    def test_qwen3_next_80b_a3b(self):
-        self.run_throughput()
 
 
 class TestQwen3Next80BA3B_aime25(TestAscendAccuracyTestCaseBase):

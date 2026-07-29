@@ -4,10 +4,7 @@ from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
     TestAscendAccuracyTestCaseBase,
 )
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
-    AISBENCHMARK_DATASET_DEFAULT,
-    BENCHMARK_TOOL_DEFAULT,
     QWEN3_6_27B_W8A8_MODEL_PATH,
-    TestAscendPerformanceTestCaseBase,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
@@ -84,29 +81,6 @@ QWEN3_6_27B_3K5_1K5_OTHER_ARGS = [
     "--tool-call-parser",
     "qwen3_coder",
 ]
-
-
-class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_50ms(TestAscendPerformanceTestCaseBase):
-    """Test NPU performance for Qwen3.6-27B-w8a8 1p in3k5 out1k5 50ms"""
-
-    benchmark_tool = BENCHMARK_TOOL_DEFAULT
-    dataset_type = AISBENCHMARK_DATASET_DEFAULT
-    model = QWEN3_6_27B_W8A8_MODEL_PATH
-    other_args = QWEN3_6_27B_3K5_1K5_OTHER_ARGS
-    envs = QWEN3_6_27B_3K5_1K5_ENVS
-    dataset_name = "random"
-    max_concurrency = 54
-    num_prompts = 216
-    input_len = 3500
-    output_len = 1500
-    random_range_ratio = 1
-    seed = 1
-    tpot = 50
-    output_token_throughput = 786.69
-
-    def test_npu_qwen3_6_27b_1p_in3k5_out1k5_50ms(self):
-        """Run NPU performance test for Qwen3.6-27B-w8a8 in3k5 out1k5 50ms"""
-        self.run_throughput()
 
 
 class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_gpqa(TestAscendAccuracyTestCaseBase):
