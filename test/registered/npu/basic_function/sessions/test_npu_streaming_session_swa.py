@@ -10,7 +10,10 @@ NPU adaptations:
 - uses the NPU kit sglang.test.ascend.npu_streaming_session_kit
 """
 
+import os
 import unittest
+
+os.environ["ASCEND_USE_FIA"] = "0"
 
 from sglang.test.ascend.npu_streaming_session_kit import (
     AbortLeakReproKitMixin,

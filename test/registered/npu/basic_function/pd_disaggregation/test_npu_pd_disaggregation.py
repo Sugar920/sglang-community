@@ -87,6 +87,7 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
             **os.environ,
             "SGLANG_HICACHE_FILE_BACKEND_STORAGE_DIR": cls.temp_dir,
             "ASCEND_MF_STORE_URL": "tcp://127.0.0.1:24667",
+            "ASCEND_MF_TRANSFER_PROTOCOL": "device_urma",
         }
         cls.process_prefill = popen_launch_pd_server(
             cls.model,
@@ -203,6 +204,7 @@ class TestDisaggregationDecodeWithHiCache(DisaggregationHiCacheBase):
             **os.environ,
             "SGLANG_HICACHE_FILE_BACKEND_STORAGE_DIR": cls.temp_dir,
             "ASCEND_MF_STORE_URL": "tcp://127.0.0.1:24667",
+            "ASCEND_MF_TRANSFER_PROTOCOL": "device_urma",
         }
         cls.process_decode = popen_launch_pd_server(
             cls.model,

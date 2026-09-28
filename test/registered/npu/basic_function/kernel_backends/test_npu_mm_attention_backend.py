@@ -1,4 +1,7 @@
+import os
 import unittest
+
+os.environ["SGLANG_NPU_FORWARD_NATIVE_GEMMA_RMS_NORM"] = "1"
 
 from sglang.test.ascend.output_capturer import OutputCapturer
 from sglang.test.ascend.test_ascend_utils import GEMMA_3_4B_IT_WEIGHTS_PATH

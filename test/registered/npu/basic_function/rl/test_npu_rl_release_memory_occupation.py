@@ -36,6 +36,8 @@ from sglang.test.test_utils import (
 register_npu_ci(est_time=600, suite="full-2-npu-a3", nightly=True)
 register_npu_ci(est_time=600, suite="full-1-npu-a5", nightly=True)
 
+os.environ["SGLANG_NPU_FORWARD_NATIVE_GEMMA_RMS_NORM"] = "1"
+
 _LOG_FMT = "%(asctime)s - %(levelname)s - %(message)s"
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

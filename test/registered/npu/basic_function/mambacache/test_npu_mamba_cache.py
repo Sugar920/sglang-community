@@ -1,6 +1,9 @@
+import os
 import unittest
 
 import requests
+
+os.environ["SGLANG_NPU_FORWARD_NATIVE_GEMMA_RMS_NORM"] = "1"
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.gsm8k_ascend_mixin import GSM8KAscendMixin
@@ -46,6 +49,10 @@ class TestMambaCacheWithMemoryRatio(GSM8KAscendMixin, CustomTestCase):
         "8",
         "--disable-radix-cache",
     ]
+    env = {
+        **GSM8KAscendMixin.env,
+        "SGLANG_NPU_FORWARD_NATIVE_GEMMA_RMS_NORM": "1",
+    }
 
 
 class TestMambaCacheWithMambaCacheSize(TestMambaCacheWithMemoryRatio):

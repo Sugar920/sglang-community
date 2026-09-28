@@ -4,6 +4,7 @@ import unittest
 import requests
 
 os.environ.setdefault("HCCL_BUFFSIZE", "600")
+os.environ["SGLANG_NPU_FORWARD_NATIVE_GEMMA_RMS_NORM"] = "1"
 
 from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
