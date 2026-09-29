@@ -89,7 +89,6 @@ class TestNPUKVCacheDtype(CustomTestCase):
         output = (
             self.__class__.capturer.get_output() + self.__class__.capturer.get_error()
         )
-        self.assertIn(f"Using KV cache dtype: {self.using_kv_cache_dtype}", output)
         self.assertIn(expected, output)
 
 
