@@ -36,6 +36,7 @@ class TestDynamicChunking(CustomTestCase):
         "1024",
         "--mem-fraction-static",
         "0.80",
+        "--disable-chunked-prefix-cache",
     ]
 
     @classmethod
