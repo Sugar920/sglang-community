@@ -29,6 +29,7 @@ class TestDisaggregationPrefillPPAccuracy(TestDisaggregationBase):
         super().setUpClass()
         cls.model = LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH
         os.environ["ASCEND_MF_STORE_URL"] = "tcp://127.0.0.1:24666"
+        os.environ["ASCEND_MF_TRANSFER_PROTOCOL"] = "device_urma"
 
         # Non blocking start servers
         cls.start_prefill()
@@ -45,6 +46,7 @@ class TestDisaggregationPrefillPPAccuracy(TestDisaggregationBase):
     @classmethod
     def tearDownClass(cls):
         os.environ.pop("ASCEND_MF_STORE_URL")
+        os.environ.pop("ASCEND_MF_TRANSFER_PROTOCOL", None)
         os.environ.pop("OPENAI_API_KEY", None)
         os.environ.pop("OPENAI_API_BASE", None)
         super().tearDownClass()
@@ -146,6 +148,7 @@ class TestDisaggregationDecodePPAccuracy(TestDisaggregationBase):
         super().setUpClass()
         cls.model = LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH
         os.environ["ASCEND_MF_STORE_URL"] = "tcp://127.0.0.1:24666"
+        os.environ["ASCEND_MF_TRANSFER_PROTOCOL"] = "device_urma"
 
         # Non blocking start servers
         cls.start_prefill()
@@ -162,6 +165,7 @@ class TestDisaggregationDecodePPAccuracy(TestDisaggregationBase):
     @classmethod
     def tearDownClass(cls):
         os.environ.pop("ASCEND_MF_STORE_URL")
+        os.environ.pop("ASCEND_MF_TRANSFER_PROTOCOL", None)
         os.environ.pop("OPENAI_API_KEY", None)
         os.environ.pop("OPENAI_API_BASE", None)
         super().tearDownClass()
@@ -247,6 +251,7 @@ class TestDisaggregationPrefillPPDynamicChunkAccuracy(TestDisaggregationBase):
         super().setUpClass()
         cls.model = LLAMA_3_1_8B_INSTRUCT_WEIGHTS_PATH
         os.environ["ASCEND_MF_STORE_URL"] = "tcp://127.0.0.1:24666"
+        os.environ["ASCEND_MF_TRANSFER_PROTOCOL"] = "device_urma"
 
         # Non blocking start servers
         cls.start_prefill()
