@@ -10,14 +10,6 @@ fi
 # shadow the installed package on sys.path.
 cd "${sglang_source_path}"
 
-# Overlay checkout-only test utils into the installed sglang package; the
-# image's installed sglang predates sglang.test.sgl_eval_utils (upstream 09-25).
-SGLANG_PKG_DIR=$(python -c "import sglang, os; print(os.path.dirname(sglang.__file__))")
-if [ ! -f "${SGLANG_PKG_DIR}/test/sgl_eval_utils.py" ] && [ -f "${sglang_source_path}/python/sglang/test/sgl_eval_utils.py" ]; then
-    cp "${sglang_source_path}/python/sglang/test/sgl_eval_utils.py" "${SGLANG_PKG_DIR}/test/sgl_eval_utils.py"
-    echo "Overlaid sgl_eval_utils.py into ${SGLANG_PKG_DIR}/test/"
-fi
-
 echo "NPU info:"
 npu-smi info
 
@@ -117,6 +109,7 @@ else
     mkdir -p "${ascend_test_util_path}"
     mv "${ascend_test_util_path}" "${ascend_test_util_path}_bak"
     cp -r ${sglang_source_path}/python/sglang/test/ascend "${ascend_test_util_path}"
+    cp ${sglang_source_path}/python/sglang/test/sgl_eval_utils.py ${sglang_pkg_path}/sglang/test/sgl_eval_utils.py
 fi
 
 # set environment of cann
