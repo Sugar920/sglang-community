@@ -5,14 +5,13 @@ from statistics import mean
 from types import SimpleNamespace
 
 from sglang.srt.utils.hf_transformers_utils import get_tokenizer
-from sglang.test.ascend.test_ascend_utils import QWEN3_0_6B_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import QWEN3_0_6B_WEIGHTS_PATH, is_npu_a5
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
     CustomTestCase,
-    is_in_ci,
     popen_launch_server,
     terminate_and_kill_process_tree,
 )
@@ -136,7 +135,7 @@ class TestTokenizerBatchEncode(CustomTestCase):
             model=self.model,
             eval_name="gsm8k",
             api="completion",
-            num_examples=200 if is_in_ci() else 1319,
+            num_examples=1319 if is_npu_a5() else 200,
             num_threads=128,
         )
         metrics = run_eval(args)

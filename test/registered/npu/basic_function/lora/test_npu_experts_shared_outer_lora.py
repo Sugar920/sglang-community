@@ -7,6 +7,7 @@ from sglang.srt.utils import kill_process_tree
 from sglang.test.ascend.test_ascend_utils import (
     QWEN3_30B_A3B_INSTRUCT_2507_THEO_STYLE_LORA_PATH,
     QWEN3_30B_A3B_INSTRUCT_2507_WEIGHTS_PATH,
+    is_npu_a5,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -27,7 +28,11 @@ class TestExpertsSharedOuterLora(CustomTestCase):
     [Test Target] --experts-shared-outer-loras
     """
 
-    lora_a = QWEN3_30B_A3B_INSTRUCT_2507_THEO_STYLE_LORA_PATH
+    lora_a = (
+        "/root/.cache/modelscope/hub/models/Qwen3-30B-A3B-Instruct-2507-theo-style-lora"
+        if is_npu_a5()
+        else QWEN3_30B_A3B_INSTRUCT_2507_THEO_STYLE_LORA_PATH
+    )
 
     @classmethod
     def setUpClass(cls):

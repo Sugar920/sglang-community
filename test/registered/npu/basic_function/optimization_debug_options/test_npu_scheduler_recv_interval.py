@@ -8,12 +8,11 @@ from sglang.test.run_eval import run_eval
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
     DEFAULT_URL_FOR_TEST,
-    is_in_ci,
     popen_launch_server,
 )
 
 register_npu_ci(est_time=800, suite="full-1-npu-a3", nightly=True)
-from sglang.test.ascend.test_ascend_utils import QWEN3_0_6B_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import QWEN3_0_6B_WEIGHTS_PATH, is_npu_a5
 
 
 class TestSchedulerRecvIntervalConsistency(unittest.TestCase):
@@ -55,7 +54,7 @@ class TestSchedulerRecvIntervalConsistency(unittest.TestCase):
             model=self.model,
             eval_name="gsm8k",
             api="completion",
-            num_examples=200 if is_in_ci() else 1319,
+            num_examples=1319 if is_npu_a5() else 200,
             num_threads=10,
         )
         metrics = run_eval(args)
