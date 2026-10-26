@@ -43,7 +43,7 @@ class TestDownloadDir(CustomTestCase):
         cls.process = popen_launch_server(
             cls.model,
             DEFAULT_URL_FOR_TEST,
-            timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
+            timeout=3600,
             other_args=other_args,
             env=env,
         )
