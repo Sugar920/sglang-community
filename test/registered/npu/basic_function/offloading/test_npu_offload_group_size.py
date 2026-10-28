@@ -4,7 +4,10 @@ import unittest
 import requests
 
 from sglang.srt.utils import kill_process_tree
-from sglang.test.ascend.test_ascend_utils import DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import (
+    DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
+    is_npu_a5,
+)
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
     DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
@@ -38,11 +41,15 @@ class TestOffloadGroupSize(CustomTestCase):
     def setUpClass(cls):
         cls.out_log_file = open("./cache_out_log.txt", "w+", encoding="utf-8")
         cls.err_log_file = open("./cache_err_log.txt", "w+", encoding="utf-8")
+        env = {**os.environ}
+        if is_npu_a5():
+            env["SGLANG_NPU_DISABLE_ACL_FORMAT_WEIGHT"] = "1"
         cls.process = popen_launch_server(
             DEEPSEEK_CODER_V2_LITE_WEIGHTS_PATH,
             DEFAULT_URL_FOR_TEST,
             timeout=DEFAULT_TIMEOUT_FOR_SERVER_LAUNCH,
             other_args=cls.OTHER_ARGS,
+            env=env,
             return_stdout_stderr=(cls.out_log_file, cls.err_log_file),
         )
 
