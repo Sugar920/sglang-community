@@ -10,7 +10,7 @@ from typing import Dict
 import requests
 
 from sglang.bench_serving import get_tokenizer
-from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH
+from sglang.test.ascend.test_ascend_utils import QWEN3_32B_WEIGHTS_PATH, is_npu_a5
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.server_fixtures.disaggregation_fixture import (
     PDDisaggregationServerBase,
@@ -39,6 +39,9 @@ class DisaggregationHiCacheBase(PDDisaggregationServerBase):
         super(DisaggregationHiCacheBase, cls).setUpClass()
 
         cls.model = QWEN3_32B_WEIGHTS_PATH
+
+        if is_npu_a5():
+            os.environ["ASCEND_MF_TRANSFER_PROTOCOL"] = "device_urma"
 
         cls.tokenizer = get_tokenizer(cls.model)
         cls.temp_dir = tempfile.mkdtemp()
