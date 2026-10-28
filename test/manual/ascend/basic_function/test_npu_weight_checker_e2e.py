@@ -114,16 +114,39 @@ class TestWeightCheckerE2E(CustomTestCase):
     def _update_weights(
         self, named_tensors: List[Tuple[str, torch.Tensor]]
     ) -> requests.Response:
-        return requests.post(
-            f"{self.url}/update_weights_from_tensor",
-            json={
-                "serialized_named_tensors": [
-                    MultiprocessingSerializer.serialize(named_tensors, output_str=True)
-                ],
-                "flush_cache": True,
-            },
+        begin_resp = requests.post(
+            f"{self.url}/begin_weight_update",
+            json={"selector": "all"},
             timeout=120,
         )
+        self.assertEqual(begin_resp.status_code, 200, begin_resp.text)
+        self.assertTrue(begin_resp.json()["success"], begin_resp.text)
+
+        try:
+            update_resp = requests.post(
+                f"{self.url}/update_weights_from_tensor",
+                json={
+                    "serialized_named_tensors": [
+                        MultiprocessingSerializer.serialize(
+                            named_tensors, output_str=True
+                        )
+                    ],
+                    "flush_cache": True,
+                },
+                timeout=120,
+            )
+            self.assertEqual(update_resp.status_code, 200, update_resp.text)
+            self.assertTrue(update_resp.json()["success"], update_resp.text)
+        finally:
+            end_resp = requests.post(
+                f"{self.url}/end_weight_update",
+                json={},
+                timeout=120,
+            )
+            self.assertEqual(end_resp.status_code, 200, end_resp.text)
+            self.assertTrue(end_resp.json()["success"], end_resp.text)
+
+        return update_resp
 
     def test_a_snapshot_then_compare_unchanged_succeeds(self):
         resp = self._post("snapshot")
@@ -194,18 +217,23 @@ class TestWeightCheckerE2E(CustomTestCase):
         self.assertIn("checksums", first)
         self.assertIn("parallelism_info", first)
 
-        info = first["parallelism_info"]
-        for key in (
-            "tp_rank",
-            "tp_size",
-            "dp_rank",
-            "dp_size",
-            "pp_rank",
-            "pp_size",
-            "rank",
-            "size",
-        ):
-            self.assertIn(key, info)
+        infos = first["parallelism_info"]
+        self.assertIsInstance(infos, list)
+        self.assertGreater(len(infos), 0)
+
+        for info in infos:
+            self.assertIsInstance(info, dict)
+            for key in (
+                "tp_rank",
+                "tp_size",
+                "dp_rank",
+                "dp_size",
+                "pp_rank",
+                "pp_size",
+                "rank",
+                "size",
+            ):
+                self.assertIn(key, info)
 
         checksums = first["checksums"]
         self.assertGreater(len(checksums), 0)
