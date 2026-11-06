@@ -234,7 +234,7 @@ jobs:
             # image's preinstalled copy predates the fork_worker_preload kwarg.
             ci_test_util_path=${sglang_pkg_path}/sglang/test/ci
             if [ -d "${ci_test_util_path}" ]; then mv "${ci_test_util_path}" "${ci_test_util_path}_bak"; fi
-            cp -r $(pwd)/python/sglang/test/ci ${ci_test_util_path}
+            cp -r $(pwd)/scripts/ci/npu/compat/ci ${ci_test_util_path}
             rm -rf ${sglang_pkg_path}/sglang/test/kits
             cp -r $(pwd)/python/sglang/test/kits ${sglang_pkg_path}/sglang/test/
             cp $(pwd)/python/sglang/test/test_programs.py ${sglang_pkg_path}/sglang/test/test_programs.py
@@ -301,6 +301,10 @@ jobs:
           # Fail fast on any command error, undefined variable, or pipe failure.
           set -euo pipefail
           mkdir -p "${TEST_LOG_DIR}"
+          # Pin the test runner to the image-compatible snapshot committed under
+          # scripts/ci/npu/compat; the checkout's test/run_suite.py tracks
+          # sgl-project main and may import srt modules the image does not ship.
+          cp $(pwd)/scripts/ci/npu/compat/run_suite.py $(pwd)/test/run_suite.py
           ln -sf $(pwd) /root/sglang
 
           # Install missing python deps (skip if already importable).
