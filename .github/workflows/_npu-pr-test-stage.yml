@@ -229,6 +229,12 @@ jobs:
             mv ${ascend_test_util_path} ${ascend_test_util_path}_bak
             cp -r $(pwd)/python/sglang/test/ascend ${ascend_test_util_path}
             cp $(pwd)/python/sglang/test/sgl_eval_utils.py ${sglang_pkg_path}/sglang/test/sgl_eval_utils.py
+            # Overlay the checkout test/ci package too: the checked-out run_suite.py
+            # imports run_unittest_files from the installed sglang package, and the
+            # image's preinstalled copy predates the fork_worker_preload kwarg.
+            ci_test_util_path=${sglang_pkg_path}/sglang/test/ci
+            if [ -d "${ci_test_util_path}" ]; then mv "${ci_test_util_path}" "${ci_test_util_path}_bak"; fi
+            cp -r $(pwd)/python/sglang/test/ci ${ci_test_util_path}
             rm -rf ${sglang_pkg_path}/sglang/test/kits
             cp -r $(pwd)/python/sglang/test/kits ${sglang_pkg_path}/sglang/test/
             cp $(pwd)/python/sglang/test/test_programs.py ${sglang_pkg_path}/sglang/test/test_programs.py
