@@ -4,7 +4,7 @@ from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
     EVALSCOPE,
     TestNpuAccuracyMultiNodePdSepTestCaseBase,
 )
-from sglang.test.ascend.e2e.test_npu_dual_pass import assert_no_regression
+from sglang.test.ascend.e2e.test_npu_dual_pass import record_pass1
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     DEEPSEEK_V4_FLASH_DEFAULT_MODEL_PATH,
 )
@@ -16,13 +16,13 @@ register_npu_ci(
     nightly=True,
 )
 
-CASE_ID = "test_npu_deepseek_v4_flash_fp8_1p1d_4p_gsm8k_a5_overlap"
+CASE_ID = "test_npu_deepseek_v4_flash_fp8_1p1d_8p_gsm8k_a5_overlap"
 
+# Pass 1: ASCEND_USE_FIA left unset (image default), CPU seq_lens mirror kept (1).
 _PREFILL_ENVS = {
     "PYTORCH_NPU_ALLOC_CONF": "expandable_segments:True",
     "STREAMS_PER_DEVICE": "32",
-    "SGLANG_NPU_ATTN_BACKEND_NEEDS_CPU_SEQ_LENS": "0",
-    "ASCEND_USE_FIA": "0",
+    "SGLANG_NPU_ATTN_BACKEND_NEEDS_CPU_SEQ_LENS": "1",
     "SGLANG_SET_CPU_AFFINITY": "1",
     "TASK_QUEUE_ENABLE": "2",
     "INF_NAN_MODE_FORCE_DISABLE": "1",
@@ -69,11 +69,11 @@ _PREFILL_ARGS = [
     "npu",
     "--trust-remote-code",
     "--tp-size",
-    4,
+    8,
     "--pp-size",
     1,
     "--dp-size",
-    1,
+    2,
     "--enable-dp-attention",
     "--enable-dp-lm-head",
     "--moe-a2a-backend",
@@ -107,9 +107,9 @@ _DECODE_ARGS = [
     "npu",
     "--trust-remote-code",
     "--tp-size",
-    4,
+    8,
     "--dp-size",
-    4,
+    8,
     "--enable-dp-attention",
     "--moe-a2a-backend",
     "deepep",
@@ -145,10 +145,10 @@ MODEL_CONFIG = {
 }
 
 
-class TestNPUDeepSeekV4FlashFP8_1P1D_4PGSM8KA5Overlap(
+class TestNPUDeepSeekV4FlashFP8_1P1D_8PGSM8KA5OverlapFiaUnset(
     TestNpuAccuracyMultiNodePdSepTestCaseBase
 ):
-    """Pass 2: SGLANG_NPU_ATTN_BACKEND_NEEDS_CPU_SEQ_LENS=0, ASCEND_USE_FIA=0."""
+    """Pass 1: SGLANG_NPU_ATTN_BACKEND_NEEDS_CPU_SEQ_LENS=1, ASCEND_USE_FIA unset."""
 
     benchmark_tool = EVALSCOPE
     model_config = MODEL_CONFIG
@@ -158,10 +158,10 @@ class TestNPUDeepSeekV4FlashFP8_1P1D_4PGSM8KA5Overlap(
     generation_config = {"max_tokens": 2048, "temperature": 0.01}
     eval_batch_size = 16
 
-    def test_npu_deepseek_v4_flash_fp8_1p1d_4p_gsm8k_a5_overlap(self):
-        """Run pass-2 GSM8K and assert accuracy within 1% of pass 1."""
+    def test_npu_deepseek_v4_flash_fp8_1p1d_4p_gsm8k_a5_overlap_fia_unset(self):
+        """Run pass-1 GSM8K and record the baseline accuracy."""
         self.run_accuracy()
-        assert_no_regression(self, CASE_ID, self.last_metrics)
+        record_pass1(CASE_ID, self.last_metrics)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ register_npu_ci(
     nightly=True,
 )
 
-CASE_ID = "test_npu_deepseek_v4_flash_fp8_1p1d_4p_in16k_out1k_a5_overlap"
+CASE_ID = "test_npu_deepseek_v4_flash_fp8_1p1d_8p_in16k_out1k_a5_overlap"
 
 # Pass 1: ASCEND_USE_FIA left unset (image default), CPU seq_lens mirror kept (1).
 _PREFILL_ENVS = {
@@ -67,11 +67,11 @@ _PREFILL_ARGS = [
     "npu",
     "--trust-remote-code",
     "--tp-size",
-    4,
+    8,
     "--pp-size",
     1,
     "--dp-size",
-    1,
+    2,
     "--enable-dp-attention",
     "--enable-dp-lm-head",
     "--moe-a2a-backend",
@@ -105,9 +105,9 @@ _DECODE_ARGS = [
     "npu",
     "--trust-remote-code",
     "--tp-size",
-    4,
+    8,
     "--dp-size",
-    4,
+    8,
     "--enable-dp-attention",
     "--moe-a2a-backend",
     "deepep",
@@ -143,7 +143,7 @@ MODEL_CONFIG = {
 }
 
 
-class TestNPUDeepSeekV4FlashFP8_1P1D_4PIn16kOut1kA5OverlapFiaUnset(
+class TestNPUDeepSeekV4FlashFP8_1P1D_8PIn16kOut1kA5OverlapFiaUnset(
     TestNpuPerfMultiNodePdSepTestCaseBase
 ):
     """Pass 1: SGLANG_NPU_ATTN_BACKEND_NEEDS_CPU_SEQ_LENS=1, ASCEND_USE_FIA unset."""
