@@ -1,22 +1,20 @@
 import unittest
 
-from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
-    EVALSCOPE,
-    TestNpuAccuracyMultiNodePdSepTestCaseBase,
-)
 from sglang.test.ascend.e2e.test_npu_dual_pass import assert_no_regression
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
+    BENCHMARK_TOOL_DEFAULT,
     DEEPSEEK_V4_FLASH_DEFAULT_MODEL_PATH,
+    TestNpuPerfMultiNodePdSepTestCaseBase,
 )
 from sglang.test.ci.ci_register import register_npu_ci
 
 register_npu_ci(
-    est_time=7200,
-    suite="nightly-acc-4-npu-a5",
+    est_time=3600,
+    suite="nightly-perf-4-npu-a5",
     nightly=True,
 )
 
-CASE_ID = "test_npu_deepseek_v4_flash_fp8_1p1d_8p_gsm8k_a5_overlap"
+CASE_ID = "test_npu_deepseek_v4_flash_fp8_1p1d_16p_in16k_out1k_a5_overlap"
 
 _PREFILL_ENVS = {
     "PYTORCH_NPU_ALLOC_CONF": "expandable_segments:True",
@@ -69,11 +67,11 @@ _PREFILL_ARGS = [
     "npu",
     "--trust-remote-code",
     "--tp-size",
-    8,
+    16,
     "--pp-size",
     1,
     "--dp-size",
-    2,
+    4,
     "--enable-dp-attention",
     "--enable-dp-lm-head",
     "--moe-a2a-backend",
@@ -107,9 +105,9 @@ _DECODE_ARGS = [
     "npu",
     "--trust-remote-code",
     "--tp-size",
-    8,
+    16,
     "--dp-size",
-    8,
+    16,
     "--enable-dp-attention",
     "--moe-a2a-backend",
     "deepep",
@@ -145,22 +143,27 @@ MODEL_CONFIG = {
 }
 
 
-class TestNPUDeepSeekV4FlashFP8_1P1D_8PGSM8KA5Overlap(
-    TestNpuAccuracyMultiNodePdSepTestCaseBase
+class TestNPUDeepSeekV4FlashFP8_1P1D_16PIn16kOut1kA5Overlap(
+    TestNpuPerfMultiNodePdSepTestCaseBase
 ):
     """Pass 2: SGLANG_NPU_ATTN_BACKEND_NEEDS_CPU_SEQ_LENS=0, ASCEND_USE_FIA=0."""
 
-    benchmark_tool = EVALSCOPE
+    benchmark_tool = BENCHMARK_TOOL_DEFAULT
     model_config = MODEL_CONFIG
-    accuracy = 0.9
-    datasets = ["gsm8k"]
-    limit = 100
-    generation_config = {"max_tokens": 2048, "temperature": 0.01}
-    eval_batch_size = 16
+    dataset_name = "random"
+    input_len = 16000
+    output_len = 1000
+    num_prompts = 256
+    max_concurrency = 256
+    random_range_ratio = 1
+    request_rate = float("inf")
+    seed = 1
+    # tpot/output_token_throughput baselines commented out; the +/-2% comparison
+    # against pass 1 is the gate.
 
-    def test_npu_deepseek_v4_flash_fp8_1p1d_4p_gsm8k_a5_overlap(self):
-        """Run pass-2 GSM8K and assert accuracy within 1% of pass 1."""
-        self.run_accuracy()
+    def test_npu_deepseek_v4_flash_fp8_1p1d_4p_in16k_out1k_a5_overlap(self):
+        """Run pass-2 throughput and assert no regression vs pass 1."""
+        self.run_throughput()
         assert_no_regression(self, CASE_ID, self.last_metrics)
 
 
